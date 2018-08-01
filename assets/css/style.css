@@ -1,0 +1,13 @@
+body {
+  background-image: url("https://www.dccomics.com/sites/default/files/Marquee_teen-titans-go-movie-poster_5b5a85eecdc313.68535666.jpg");
+  background-size: cover;
+  padding: 250px;
+}
+
+
+.card {
+    height: 250px;
+}
+
+  
+
