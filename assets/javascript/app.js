@@ -1,137 +1,133 @@
+$(document).ready(function() {
 
-       //global variables
-var time = 20;
-var questions = 
-{
-    q1: ["Who is not a member of the Teen Titans?"],
-        answers:
-            {
-             "a" : "Raven",
-             "b" : "Beast Boy",
-             "c" : "Kid Flash",
-             "d" : "Starfire",
-            },
-    q2: ["Which Teen Titan can turn into any animal?"],
-           answers:
-            {
-            "a" : "Robin",
-             "b" : "Starfire",
-             "c" : "Cyborg",
-             "d" : "Beast Boy",
-            },
+
+
+$(".startbtn").on("click", trivia.startGame);
+$(document).on("click", ".btnContainer", trivia.checkGuess);
+
+
+})
+
+var trivia = {
+    correct: 0,
+    incorrect: 0,
+    currentSet: 0,
+    timer: 15,
+    timerOn: false,
+    timerId : "",
+
+    questions: {
+    q1: "Who is not a member of the Teen Titans?",
+    q2: "Which Teen Titan can turn into any animal?",
+    q3: "Who Teen Titan was Batman's former sidekick?",
+    q4: "Which Teen Titan's father is  a powerful demon?",
+    q5: "Which Teen Titan is an alien?",
+    q6: "What is Robin's go to weapon?",
+    q7: "Which rainy day activity makes the rain clouds happy?",
+    q8: "What does Beast Boy do to make Robin earn bees",
+    q9: "What is Raven's favorite show?",
+    q10: "What is Starfire's favorite animal?",
+    },
+    choices: {
+        q1: ["Raven","Beast Boy","Kid Flash","Starfire"],
+        q2: ["Robin", "Starfire", "Cyborg", "Beast Boy"],
+        q3: ["Beast Boy", "Cyborg", "Robin", "Raven"],
+        q4: ["Starfire", "Robin", "Raven", "Beast Boy"],
+        q5: ["Cyborg","Beast Boy", "Starfire", "Robin"],
+        q6: ["Mcguffin","Pain Bot", "Birdarang","Meatball Blaster"],
+        q7: ["Spaghetti Dance","Reading Books","Pee Pee Dance", "Building with Popsicle sticks"],
+        q8: ["Make tofu", "Go undercover with HIVE","Reveal his Identity","Dance"],
+        q9: ["Power Puff Girls", "Pretty Pretty Pegasus","Mother May-Eye","Adventure Time"],
+       q10: ["Kitten","Pteradactyl","Kangaroo","Gulag"],
+},
+    answers: {
+        q1: "Kid Flash",
+        q2: "Beast Boy",
+        q3: "Robin",
+        q4: "Raven",
+        q5: "Starfire",
+        q6: "Birdarang",
+        q7: "Spaghetti Dance",
+        q8: "Dance",
+        q9: "Pretty Pretty Pegasus",
+       q10: "Kitten"
+
+    },
+
+
+startGame: function () {
+   
+    trivia.currentSet = 0;
+    trivia.correct = 0;
+    trivia.incorrect = 0;
+    clearInterval(trivia.timerId);
+
+    $(".game").show();
+    $(".results").html ("");
+    $(".timer").text(trivia.timer);
+    $(".startbtn").hide();
     
-    q3: ["Who Teen Titan was Batman's former sidekick?"],
-            answers:
-            {
-            "a" : "Robin",
-             "b" : "Raven",
-             "c" : "Beast Boy",
-             "d" : "Cyborg",
-             },
-        
-    q4: ["Which Teen Titan's father is  a powerful demon?"],
-           answers: 
-           {
-            "a" : "Starfire",
-            "b" :  "Robin",
-            "c" :  "Raven",
-            "d" :  "Beast Boy",
-             },
-    
-    q5: ["Which Teen Titan is an alien?"],
-            answers:
-            {
-            "a" : "Raven",
-             "b" : "Beast Boy",
-             "c" : "Cyborg",
-             "d" : "Starfire",
-             },
-        
-    q6: ["What is Robin's go to weapon?"],
-            answers:
-            {
-            "a" : "Mcguffin",
-             "b" : "Pain Bot",
-             "c" : "Birdarang",
-             "d" : "Meatball Blaster",
-             },
-    
-    q7: ["Which rainy day activity makes the rain clouds happy?"],
-            answers:
-            {
-            "a" : "Spaghetti Dance",
-             "b" : "Reading Books",
-             "c" : "Pee Pee Dance",
-             "d" : "Building with Popsicle sticks",
-            },
-    q8: ["What does Beast Boy do to make Robin earn bees"],
-            answers:
-            {
-            "a" : "Make tofu",
-             "b" : "Go undercover with HIVE",
-             "c" : "Reveal his Identity",
-             "d" : "Dance",
-            },
-    q9: ["What is Raven's favorite show?"],
-            answers:
-            {
-            "a" : "Power Puff Girls",
-             "b" : "Pretty Pretty Pegasus",
-             "c" : "Mother May-Eye",
-             "d" : "Adventure Time",
-            },
-    
-    q10: ["What is Starfire's favorite animal?"],
-            answers:
-            {
-            "a" : "Kitten",
-             "b" : "Pteradactyl",
-             "c" : "Kangaroo",
-             "d" : "Gulag",
-            },
-}; 
+    trivia.nextQuestion();
 
-var correctAnswers;
-var wrongAnswers;
-var intervalId;
+},
 
-console.log(questions.q1);
 
-function startGame() {
+nextQuestion:  function() {
+    trivia.timer = 15;
+    $(".timer").text(trivia.timer);
 
-}
-
-function gameplay () {    
-          
-         $(".startbtn").on("click", function() {
-            $(".startbtn").remove();
-            $(".card-text").empty();
-            question1();
-            run();
-            decrement();
-        })
+    if(!trivia.timerOn) {
+        trivia.timerId = setInterval(trivia.timerRunning, 1000);
     }
-function question1 () {
-        var quests = $("<div>");
-        quests.html(questions.q1);
-        $(".card-text").append(quests);
-        intervalId = setInterval(decrement, 1000);
-        }   
 
-        function run () {
-    clearInterval(intervalId);
-    intervalId = setInterval(decrement,1000);
-}
+    var question = Object.values(trivia.questions)[trivia.currentSet];
+    $(".card-text").text(question);
 
-function decrement () {
-    time--;
-    $(".timer").html("Time left: " + time)
-    if (time === 0) {
-        stop();
+    var allQuestions = Object.values(trivia.choices)[trivia.currentSet];
+
+    $.each(allQuestions, function(index, key) {
+        $(".btnContainer").append($("<button class='option btn btn-primary btn-lg'>" + key + "</button>"));
+    })
+
+},
+
+timerRunning: function () {
+ if(trivia.timer > 0 && trivia.currentSet < Object.keys(trivia.questions).length){
+     $(".timer").text(trivia.timer);
+    trivia.timer--;
+ } else if (trivia.timer === 0) {
+     clearInterval(trivia.timerId);
+     resultId = setTimeout(trivia.guessResult, 1000);
+     $(".results").html("Time's up! The answer is "+ Object.values(trivia.answers)[trivia.currentSet]);
+ } else if (trivia.currentSet === Object.keys(trivia.questions).length){
+     $(".results").html("Thanks for Playing!" +
+        "<p>Correct: " + trivia.correct + "</p>" +
+        "<p>Incorrect: " + trivia.incorrect + "</p>");   
+ }
+},
+
+checkGuess: function () {
+    
+   var currentAnswer=  Object.values(trivia.answers)[trivia.currentSet];
+         console.log(currentAnswer);
+    
+    if (currentAnswer == (Object.values(trivia.answers)[trivia.currentSet])) {
+        trivia.correct++;
+        clearInterval(trivia.timerId)
+        resultId = setTimeout(trivia.guessResult, 1000);
+        $(".results").html("You are Correct!");
+    } else if (Object.values(trivia.answers)[trivia.currentSet]!== currentAnswer) {
+        trivia.incorrect++;
+        clearInterval(trivia.guessResult, 1000);
+        $(".results").html("Sorry! The answer is " + currentAnswer);
     }
-}
-function stop () {
-    clearInterval(intervalId);
-};
+ },
 
-gameplay();
+guessResult: function() {
+    trivia.currentSet++;
+    $(".results").empty();
+    $(".btnContainer").empty();
+    trivia.nextQuestion();
+}
+}
+    
